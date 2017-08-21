@@ -78,8 +78,6 @@ class FlickrRequest: NSObject{
                 /* 6. Use the data! */
                 performUIUpdatesOnMain {
                     
-                   // print("number of photosArray:\(photosArray.count)")
-                    
                     let context = self.appDelegate.getContext()
                     var images = [Photo]()
                     
@@ -92,6 +90,7 @@ class FlickrRequest: NSObject{
                             
                             if let url  = URL(string: urlString){
                                 let data = NSData(contentsOf: url)
+                                //saving the new object to core data
                                 let photo = Photo(photoData: data as! Data , location: selectedPin, insertInto: context)
                                 images.append(photo)
                                 do {
@@ -113,7 +112,7 @@ class FlickrRequest: NSObject{
             }
         
     }
-        // start the task!
+        // start the task
         task.resume()
       
 }

@@ -57,36 +57,17 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
             self.mapView.setRegion(region, animated: true)
         }
     }
-    
+    /* try fetching images from the core data. Check if images for the current location were downloaded before, if not - load photos from flickr*/
     func fetchImages(){
         let managedContext = self.appDelegate.getContext()
         let fetchRequest:NSFetchRequest<Photo> = Photo.fetchRequest()
         print("finished fetching")
         fetchRequest.sortDescriptors = []
         fetchRequest.predicate = NSPredicate(format: "location = %@", currentPin!)
-        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedContext, sectionNameKeyPath: nil, cacheName: nil)
-        
-        do {
-            try frc.performFetch()
-            
-        } catch {
-            let fetchError = error as NSError
-            print("Unable to Perform Fetch Request")
-            print("\(fetchError), \(fetchError.localizedDescription)")
-        }
-        
-        if let results = frc.fetchedObjects, results.count > 0 {
-            print("\(results.count) photos from core data fetched.")
-            photoArray = results
-            self.collectionView.reloadData()
-        } else {
-            loadPhotosFromFlickr()
-        }
-
-        
-        
-       /* do{
+    
+       do{
             let results = try managedContext.fetch(fetchRequest)
+        //always prints the number of results = 0
             print("Number of results:\(results.count)")
             if results.count > 0{
                 photoArray = results
@@ -98,7 +79,7 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
         }catch let error as NSError{
             print("Could not fetch \(error), \(error.userInfo)")
             
-        }*/
+        }
 
         
     }
