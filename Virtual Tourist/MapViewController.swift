@@ -17,6 +17,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var editBtn:UIBarButtonItem!
      //let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var managedContext: NSManagedObjectContext!
+    var isEditingMode = true
+    var pins = [Pin]()
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,16 +38,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func editPins(){
-        print("hello")
-        editLabel.isHidden = false
-        if isEditing{
-            print("is editing")
-            editLabel.isHidden = true
-            self.setEditing(false, animated: true)
-        }else{
+        
+        
+        if isEditingMode{
+            
             editBtn.title = "Done"
             editLabel.isHidden = false
-            self.setEditing(true, animated: true)
+            isEditingMode = false
+            
+        }else{
+            editBtn.title = "Edit"
+            editLabel.isHidden = true
+            isEditingMode = true
             
         }
     }
@@ -53,31 +58,24 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
         
-        if gesture.state == .ended {
+        if gesture.state == UIGestureRecognizerState.began{
             let point = gesture.location(in: self.mapView)
             let coordinate = self.mapView.convert(point, toCoordinateFrom: self.mapView)
-            print(coordinate)
-            //Now use this coordinate to add annotation on map.
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
             
-           savePin(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
-            performUIUpdatesOnMain {
-                self.fetchPins()
+            let pin = Pin(coordinate.latitude, coordinate.longitude, context: managedContext)
+            pins.append(pin)
+            mapView.addAnnotation(pin.annotation)
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Save error: \(error),description: \(error.userInfo)")
             }
+            
+            
         }
-    }
-    
-    func savePin(lat:Double, lon: Double){
-        //let managedContext = self.appDelegate.getContext()
-        _ = Pin(lat, lon, context: managedContext)
         
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Save error: \(error),description: \(error.userInfo)")
-        }
     }
+
     
     func fetchPins(){
         //let managedContext = self.appDelegate.getContext()
@@ -85,45 +83,80 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         do{
             let results = try managedContext.fetch(pinFetch)
-            var annotations = [MKPointAnnotation]()
+            
             if results.count > 0{
+            print("found results")
+            for result in results{
+                pins.append(result)
+                mapView.addAnnotation(result.annotation)
                 
-                for result in results{
-                    let lat = CLLocationDegrees(result.latitude)
-                    let lon  = CLLocationDegrees(result.longitude)
-                    let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coordinate
-                    annotations.append(annotation)
-                    
-                }
-                performUIUpdatesOnMain {
-                    self.mapView.addAnnotations(annotations)
-                    print("annotations added to the map view.")
-                }
-                
+            }
             }else{
                 print("no pins located yet")
             }
+            
         }catch let error as NSError {
             print("Fetch error: \(error) description: \(error.userInfo)")
         }
     }
     
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        //let managedContext = self.appDelegate.getContext()
-        mapView.deselectAnnotation(view.annotation, animated: true)
-        let lat = view.annotation?.coordinate.latitude
-        let lon = view.annotation?.coordinate.longitude
-        print("selected pin's lat:\(lat), lon:\(lon)")
-        let selectedPin = Pin(lat!, lon!, context: managedContext)
-             //Perform segue to the photo album
-        print("Perform segue to the photo album.")
-        performUIUpdatesOnMain {
-        self.performSegue(withIdentifier: "PhotoAlbumView", sender: selectedPin)
-        }
-            
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        let reuseId = "pin"
+        
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+        pinView?.animatesDrop = true
+        
+        
+        return pinView
     }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+       
+        mapView.deselectAnnotation(view.annotation, animated: true)
+        
+        
+       let lat = view.annotation?.coordinate.latitude
+       let lon = view.annotation?.coordinate.longitude
+       print("selected pin's lat:\(lat!), lon:\(lon!)")
+        
+        
+       let selectedPin = Pin(lat!, lon!, context: managedContext)
+        
+        if !isEditingMode{
+            
+            for pin in pins{
+                
+                if pin.latitude == selectedPin.latitude && pin.longitude == selectedPin.longitude{
+                    managedContext.delete(pin)
+                    let index = pins.index(of: pin)
+                    
+                    pins.remove(at: index!)
+                    
+                    
+                    do {
+                        try self.managedContext.save()
+                    } catch let error as NSError {
+                        print("Save error: \(error),description: \(error.userInfo)")
+                    }
+
+                    mapView.removeAnnotation(view.annotation!)
+                    print("the pin was deleted")
+                    print(pins.count)
+                    
+                }
+                
+            }
+            
+        }else{
+        print("segue to the photo album.")
+        performSegue(withIdentifier: "PhotoAlbumView", sender: selectedPin)
+        }
+
+        }
+    
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "PhotoAlbumView" {

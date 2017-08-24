@@ -8,9 +8,18 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 
 public class Pin: NSManagedObject {
+    
+    var annotation : MKPointAnnotation {
+        let pin = MKPointAnnotation()
+        pin.coordinate.latitude = latitude
+        pin.coordinate.longitude = longitude
+        
+        return pin
+    }
     
     convenience init(_ latitude: Double,_ longitude: Double, context: NSManagedObjectContext?){
         

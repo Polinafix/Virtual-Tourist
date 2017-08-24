@@ -19,7 +19,7 @@ struct CoreDataStack {
         self.modelName = modelName
     }
     
-    private lazy var storeContainer: NSPersistentContainer = {
+     lazy var storeContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: self.modelName)
         container.loadPersistentStores {
             (storeDescription, error) in
@@ -36,9 +36,6 @@ struct CoreDataStack {
     
     
     
-    
-
-
     mutating func saveContext () {
         guard managedContext.hasChanges else { return }
         do {
