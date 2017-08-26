@@ -122,25 +122,24 @@ class MapViewController: UIViewController, MKMapViewDelegate {
        print("selected pin's lat:\(lat!), lon:\(lon!)")
         
         
-       let selectedPin = Pin(lat!, lon!, context: managedContext)
+       //let selectedPin = Pin(lat!, lon!, context: managedContext)
         
         if !isEditingMode{
             
             for pin in pins{
                 
-                if pin.latitude == selectedPin.latitude && pin.longitude == selectedPin.longitude{
+                if pin.latitude == lat && pin.longitude == lon{
                     managedContext.delete(pin)
-                    let index = pins.index(of: pin)
-                    
-                    pins.remove(at: index!)
-                    
-                    
                     do {
                         try self.managedContext.save()
                     } catch let error as NSError {
                         print("Save error: \(error),description: \(error.userInfo)")
                     }
-
+                    
+                    let index = pins.index(of: pin)
+                    pins.remove(at: index!)
+                    
+                    
                     mapView.removeAnnotation(view.annotation!)
                     print("the pin was deleted")
                     print(pins.count)
@@ -151,7 +150,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
         }else{
         print("segue to the photo album.")
-        performSegue(withIdentifier: "PhotoAlbumView", sender: selectedPin)
+            for pin in pins{
+                
+                if pin.latitude == lat && pin.longitude == lon{
+                    performSegue(withIdentifier: "PhotoAlbumView", sender: pin)
+                }
+                
+            }
+        
         }
 
         }

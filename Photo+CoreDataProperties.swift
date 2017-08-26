@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  Virtual Tourist
 //
-//  Created by Polina Fiksson on 15/08/2017.
+//  Created by Polina Fiksson on 24/08/2017.
 //  Copyright © 2017 PolinaFiksson. All rights reserved.
 //
 
@@ -17,6 +17,7 @@ extension Photo {
     }
 
     @NSManaged public var photoData: NSData?
+    @NSManaged public var photoUrl: String?
     @NSManaged public var location: Pin?
 
 }

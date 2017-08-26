@@ -116,25 +116,28 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SOo-xZ-xcq">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="tGC-KP-lmn"/>
-                                    <barButtonItem title="New Collection" id="ZJE-SW-SUm"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="TP2-Dx-99r"/>
-                                </items>
-                            </toolbar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HNK-jf-8DH">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="ogg-NX-NU6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="buttonClicked:" destination="M7h-bq-wCj" eventType="touchUpInside" id="pJL-q5-zfD"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="ATi-jB-MBO" secondAttribute="trailing" id="1yA-Z9-kc0"/>
                             <constraint firstAttribute="trailing" secondItem="DY3-SL-skD" secondAttribute="trailing" id="Bai-Sd-Bww"/>
-                            <constraint firstItem="SOo-xZ-xcq" firstAttribute="bottom" secondItem="vlT-vW-KOZ" secondAttribute="top" id="NiS-hq-xNJ"/>
-                            <constraint firstItem="SOo-xZ-xcq" firstAttribute="leading" secondItem="ATi-jB-MBO" secondAttribute="leading" id="S40-QN-N3g"/>
-                            <constraint firstItem="SOo-xZ-xcq" firstAttribute="trailing" secondItem="ATi-jB-MBO" secondAttribute="trailing" id="XnZ-KO-7kV"/>
-                            <constraint firstItem="SOo-xZ-xcq" firstAttribute="top" secondItem="ATi-jB-MBO" secondAttribute="bottom" id="Y7d-Ei-Xh5"/>
+                            <constraint firstAttribute="trailing" secondItem="HNK-jf-8DH" secondAttribute="trailing" id="TDS-qG-P85"/>
+                            <constraint firstItem="HNK-jf-8DH" firstAttribute="leading" secondItem="Y49-Np-NO4" secondAttribute="leading" id="Wz6-lg-DWM"/>
+                            <constraint firstItem="vlT-vW-KOZ" firstAttribute="top" secondItem="HNK-jf-8DH" secondAttribute="bottom" id="a3N-cc-FJw"/>
                             <constraint firstItem="ATi-jB-MBO" firstAttribute="top" secondItem="DY3-SL-skD" secondAttribute="bottom" constant="8" id="dVz-kg-AQl"/>
                             <constraint firstItem="DY3-SL-skD" firstAttribute="top" secondItem="kw0-bh-C6D" secondAttribute="bottom" id="gI1-q1-Fbx"/>
+                            <constraint firstItem="vlT-vW-KOZ" firstAttribute="top" secondItem="ATi-jB-MBO" secondAttribute="bottom" constant="44" id="giK-gW-UeS"/>
                             <constraint firstItem="DY3-SL-skD" firstAttribute="leading" secondItem="Y49-Np-NO4" secondAttribute="leading" id="hKB-u7-5cs"/>
                             <constraint firstItem="ATi-jB-MBO" firstAttribute="leading" secondItem="Y49-Np-NO4" secondAttribute="leading" id="rrA-i7-cA2"/>
                         </constraints>
@@ -143,6 +146,7 @@
                         <outlet property="collectionView" destination="ATi-jB-MBO" id="o4u-sM-62Z"/>
                         <outlet property="flowLayout" destination="tJP-FI-YDj" id="UH8-ba-lZW"/>
                         <outlet property="mapView" destination="DY3-SL-skD" id="gJ6-WJ-PFO"/>
+                        <outlet property="newCollButton" destination="HNK-jf-8DH" id="xhp-Ku-yHg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C42-oM-Zue" userLabel="First Responder" sceneMemberID="firstResponder"/>

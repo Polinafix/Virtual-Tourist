@@ -88,19 +88,17 @@ class FlickrRequest: NSObject{
                             return
                         }
                             
-                            if let url  = URL(string: urlString){
-                                let data = NSData(contentsOf: url)
+                            //if let url  = URL(string: urlString){
+                                //let data = NSData(contentsOf: url)
                                 //saving the new object to core data
-                                let photo = Photo(photoData: data as! Data , location: selectedPin, insertInto: context)
+                        let photo = Photo(photoUrl: urlString, location: selectedPin, insertInto: context)
                                 images.append(photo)
                                 do {
                                     try context.save()
                                 } catch let error as NSError {
                                     print("Save error: \(error),description: \(error.userInfo)")
                                 }
-                            }
-                            
-                        
+                            //}
                     }
                 
                     completionHandler(images,nil)
@@ -116,6 +114,21 @@ class FlickrRequest: NSObject{
         task.resume()
       
 }
+    func fromDataToUrl(_ url: String, _ completionHandler:@escaping (_ photoData: Data?,_ error: String?) -> Void){
+        
+        if let url = URL(string: url){
+            let request = URLRequest(url:url)
+            let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+                if error == nil{
+                    completionHandler(data, nil)
+                }else{
+                    completionHandler(nil, error?.localizedDescription)
+                }
+            })
+            task.resume()
+        }
+    }
+    
     func urlFromParameters(_ parameters: [String:Any]) -> URL {
         var components = URLComponents()
         components.scheme = Constants.Flickr.ApiScheme

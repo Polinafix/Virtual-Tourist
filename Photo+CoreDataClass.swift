@@ -12,12 +12,12 @@ import CoreData
 
 public class Photo: NSManagedObject {
     
-    convenience init(photoData:Data, location:Pin, insertInto context: NSManagedObjectContext) {
+    convenience init(photoUrl:String, location:Pin, insertInto context: NSManagedObjectContext) {
         
         if let ent = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
             
             self.init(entity: ent, insertInto: context)
-            self.photoData = photoData as NSData?
+            self.photoUrl = photoUrl 
             self.location = location
             
         } else {

@@ -15,18 +15,23 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var newCollButton: UIButton!
+    
     //var managedContext: NSManagedObjectContext!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     
     var currentPin:Pin!
     var photoArray:[Photo] = [Photo]()
+    var selectedCells:[IndexPath] = [IndexPath]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        //collectionView.allowsMultipleSelection = true
         
         //add pin to a small map
         addPinToMap(currentPin.latitude, currentPin.longitude)
@@ -83,7 +88,7 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
 
         
     }
-    
+    //downloading images from Flickr
     func loadPhotosFromFlickr(){
         
         FlickrRequest.sharedInstance.getFlickrImages(currentPin) { (results, error) in
@@ -108,6 +113,37 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     
         
     }
+    @IBAction func buttonClicked(_ sender: UIButton) {
+        if sender.titleLabel?.text == "New Collection"{
+            print("new collection")
+        }else{
+            print("delete photos")
+            deleteImages()
+            collectionView.reloadData()
+            newCollButton.setTitle("New Collection", for: .normal)
+            
+        }
+        
+    }
+    
+    func deleteImages(){
+        
+        let managedContext = self.appDelegate.getContext()
+        for indexPath in selectedCells{
+            let photo = photoArray[indexPath.row]
+            managedContext.delete(photo)
+            photoArray.remove(at: indexPath.row)
+            collectionView.deleteItems(at: [indexPath])
+        }
+        //save the changes
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Save error: \(error),description: \(error.userInfo)")
+        }
+        //update the array with indices
+        selectedCells = [IndexPath]()
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photoArray.count
@@ -125,11 +161,24 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
         
         if photo.photoData != nil{
             performUIUpdatesOnMain {
+                cell?.imageView.image = UIImage(data:photo.photoData as! Data)
                 cell?.activityIndicator.stopAnimating()
+                cell?.activityIndicator.hidesWhenStopped = true
             }
-            cell?.imageView.image = UIImage(data:photo.photoData as! Data)
+            
         }else{
-            print("no info")
+            FlickrRequest.sharedInstance.fromDataToUrl(photo.photoUrl!, { (returnedData, error) in
+                if let photoData = returnedData{
+                    performUIUpdatesOnMain {
+                        photo.photoData = photoData as NSData?
+                        cell?.imageView.image = UIImage(data: photo.photoData as! Data)
+                        cell?.activityIndicator.stopAnimating()
+                        cell?.activityIndicator.hidesWhenStopped = true
+                    }
+                }else{
+                    print("Data error: \(error)")
+                }
+            })
         }
         
         return cell!
@@ -137,6 +186,35 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        //add implementation
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! ImageCollectionViewCell
+        
+        //check if it has already been selected
+        if let index = selectedCells.index(of: indexPath){
+
+            selectedCells.remove(at: index)
+            cell.imageView.alpha = 1.0
+
+            print("Not new:\(selectedCells.count)")
+            
+        }else{
+            selectedCells.append(indexPath)
+            //selectedCells.sorted(by: <#T##(NSIndexPath, NSIndexPath) -> Bool#>)
+             print("new:\(selectedCells.count)")
+             cell.imageView.alpha = 0.4
+        }
+        
+        if selectedCells.count > 0{
+            print("more")
+            newCollButton.setTitle("Remove Selected Pictures", for: .normal)
+            
+        
+        }else{
+            print("less")
+            newCollButton.setTitle("New Collection", for: .normal)
+        }
         
     }
 
