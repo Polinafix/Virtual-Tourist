@@ -17,6 +17,7 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var newCollButton: UIButton!
     
+    @IBOutlet weak var noPhotoLabel: UILabel!
     //var managedContext: NSManagedObjectContext!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
@@ -72,7 +73,6 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     
        do{
             let results = try managedContext.fetch(fetchRequest)
-        //always prints the number of results = 0
             print("Number of results:\(results.count)")
             if results.count > 0{
                 photoArray = results
@@ -97,10 +97,13 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
                 
                 performUIUpdatesOnMain {
                     
-                    if results != nil{
+                    if (results?.count)! > 0{
                         self.photoArray = results!
                         print("\(self.photoArray.count) photos from flickr fetched")
                         self.collectionView.reloadData()
+                    }else{
+                        print("no photos for this location")
+                        self.noPhotoLabel.text = "No photos for this location."
                     }
                 }
                 
@@ -115,7 +118,18 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     @IBAction func buttonClicked(_ sender: UIButton) {
         if sender.titleLabel?.text == "New Collection"{
+            let managedContext = self.appDelegate.getContext()
             print("new collection")
+            for photo in photoArray{
+                managedContext.delete(photo)
+            }
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Save error: \(error),description: \(error.userInfo)")
+            }
+            loadPhotosFromFlickr()
+            
         }else{
             print("delete photos")
             deleteImages()
@@ -147,14 +161,11 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photoArray.count
-       //return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? ImageCollectionViewCell
-        //cell?.imageView.image = UIImage(named:"temp")
-        //cell?.activityIndicator.startAnimating()
         let photo = photoArray[indexPath.row]
         cell?.imageView.image = UIImage(named: "temp")
         cell?.activityIndicator.startAnimating()
@@ -200,8 +211,7 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
             print("Not new:\(selectedCells.count)")
             
         }else{
-            selectedCells.append(indexPath)
-            //selectedCells.sorted(by: <#T##(NSIndexPath, NSIndexPath) -> Bool#>)
+             selectedCells.append(indexPath)
              print("new:\(selectedCells.count)")
              cell.imageView.alpha = 0.4
         }

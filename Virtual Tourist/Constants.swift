@@ -15,11 +15,7 @@ struct Constants {
         static let ApiScheme = "https"
         static let ApiHost = "api.flickr.com"
         static let ApiPath = "/services/rest"
-        
-        static let SearchBBoxHalfWidth = 1.0
-        static let SearchBBoxHalfHeight = 1.0
-        static let SearchLatRange = (-90.0, 90.0)
-        static let SearchLonRange = (-180.0, 180.0)
+ 
     }
     
     
@@ -35,6 +31,8 @@ struct Constants {
         static let Latitude = "lat"
         static let Longitude = "lon"
         static let PerPage = "per_page"
+        static let Radius = "radius"
+        static let RadiusUnits = "radius_units"
         static let NoJSONCallback = "nojsoncallback"
     }
     
@@ -46,6 +44,8 @@ struct Constants {
         static let MediumURL = "url_m"
         static let SearchMethod = "flickr.photos.search"
         static let UseSafeSearch = "1"
+        static let Radius = "5"
+        static let RadiusUnits = "mi"
     }
     
     // MARK: Flickr Response Keys

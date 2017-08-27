@@ -2,7 +2,7 @@
 //  Pin+CoreDataProperties.swift
 //  Virtual Tourist
 //
-//  Created by Polina Fiksson on 15/08/2017.
+//  Created by Polina Fiksson on 26/08/2017.
 //  Copyright © 2017 PolinaFiksson. All rights reserved.
 //
 
@@ -18,6 +18,7 @@ extension Pin {
 
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
+    @NSManaged public var pageNum: Int32
     @NSManaged public var photo: NSSet?
 
 }

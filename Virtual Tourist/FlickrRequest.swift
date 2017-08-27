@@ -17,15 +17,28 @@ class FlickrRequest: NSObject{
     
     func getFlickrImages(_ selectedPin: Pin,_ completionHandler: @escaping(_ result:[Photo]?,_ error:NSError?) -> Void) {
         
+        let numberOfPages = selectedPin.pageNum
+        var randomPage:Int = 1
+            
+        if numberOfPages > 0{
+            let limit = min(numberOfPages,30)
+            randomPage = Int(arc4random_uniform(UInt32(limit)))+1
+        }
+        
         /* 1. Set the parameters */
         let methodParameters = [
             Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
             Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
-            Constants.FlickrParameterKeys.Bbox: bboxString(selectedPin.latitude, selectedPin.longitude),
             Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
             Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
             Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
+            Constants.FlickrParameterKeys.Radius:Constants.FlickrParameterValues.Radius,
+            Constants.FlickrParameterKeys.RadiusUnits:Constants.FlickrParameterValues.RadiusUnits,
+            Constants.FlickrParameterKeys.Latitude: "\(selectedPin.latitude)",
+            Constants.FlickrParameterKeys.Longitude: "\(selectedPin.longitude)",
+            
             Constants.FlickrParameterKeys.PerPage: "20",
+            Constants.FlickrParameterKeys.Page: "\(randomPage)",
             Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch
         ] as [String : Any]
         
@@ -72,7 +85,10 @@ class FlickrRequest: NSObject{
             //get the photos Dictionary at the "photos" key
             if let photosDictionary = parsedResult[Constants.FlickrResponseKeys.Photos] as? [String:AnyObject],
                 //in the photos dictionary, get the array of photo dictionaries at the 'photo' key
-                let photosArray = photosDictionary[Constants.FlickrResponseKeys.Photo] as? [[String: AnyObject]]{
+                let photosArray = photosDictionary[Constants.FlickrResponseKeys.Photo] as? [[String: AnyObject]],
+                let numOfPages = photosDictionary["pages"] as? Int{
+                
+                selectedPin.pageNum = Int32(numOfPages)
                 
                 
                 /* 6. Use the data! */
@@ -144,13 +160,7 @@ class FlickrRequest: NSObject{
         return components.url!
     }
     
-    func bboxString(_ longitude:Double,_ latitude:Double) -> String {
-        let minimumLon = max(longitude - Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.0)
-        let minimumLat = max(latitude - Constants.Flickr.SearchBBoxHalfHeight, Constants.Flickr.SearchLatRange.0)
-        let maximumLon = min(longitude + Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.1)
-        let maximumLat = min(latitude + Constants.Flickr.SearchBBoxHalfHeight, Constants.Flickr.SearchLatRange.1)
-        return "\(minimumLon),\(minimumLat),\(maximumLon),\(maximumLat)"
-    }
+
 }
 
 
