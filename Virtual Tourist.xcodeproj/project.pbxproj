@@ -84,7 +84,6 @@
 				E0ABB49E1F433BB7008CF0E1 /* Assets.xcassets */,
 				E0ABB4A01F433BB7008CF0E1 /* LaunchScreen.storyboard */,
 				E0ABB4A31F433BB7008CF0E1 /* Info.plist */,
-				E0ABB4B61F450CB5008CF0E1 /* GCDBlackBox.swift */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -117,6 +116,7 @@
 				E0ABB4BC1F460631008CF0E1 /* ImageCollectionViewCell.swift */,
 				E0ABB4991F433BB7008CF0E1 /* MapViewController.swift */,
 				E0ABB4BA1F4605B9008CF0E1 /* PinImagesViewController.swift */,
+				E0ABB4B61F450CB5008CF0E1 /* GCDBlackBox.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";

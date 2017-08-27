@@ -18,10 +18,8 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var newCollButton: UIButton!
     
     @IBOutlet weak var noPhotoLabel: UILabel!
-    //var managedContext: NSManagedObjectContext!
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
-    
+
+    var managedContext: NSManagedObjectContext!
     var currentPin:Pin!
     var photoArray:[Photo] = [Photo]()
     var selectedCells:[IndexPath] = [IndexPath]()
@@ -31,8 +29,6 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
         
         collectionView.delegate = self
         collectionView.dataSource = self
-        
-        //collectionView.allowsMultipleSelection = true
         
         //add pin to a small map
         addPinToMap(currentPin.latitude, currentPin.longitude)
@@ -65,7 +61,6 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     /* try fetching images from the core data. Check if images for the current location were downloaded before, if not - load photos from flickr*/
     func fetchImages(){
-        let managedContext = self.appDelegate.getContext()
         let fetchRequest:NSFetchRequest<Photo> = Photo.fetchRequest()
         print("finished fetching")
         fetchRequest.sortDescriptors = []
@@ -118,16 +113,11 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     @IBAction func buttonClicked(_ sender: UIButton) {
         if sender.titleLabel?.text == "New Collection"{
-            let managedContext = self.appDelegate.getContext()
             print("new collection")
             for photo in photoArray{
                 managedContext.delete(photo)
             }
-            do {
-                try managedContext.save()
-            } catch let error as NSError {
-                print("Save error: \(error),description: \(error.userInfo)")
-            }
+            CoreDataStack.saveContext(managedContext)
             loadPhotosFromFlickr()
             
         }else{
@@ -142,7 +132,6 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
     
     func deleteImages(){
         
-        let managedContext = self.appDelegate.getContext()
         for indexPath in selectedCells{
             let photo = photoArray[indexPath.row]
             managedContext.delete(photo)
@@ -150,11 +139,7 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
             collectionView.deleteItems(at: [indexPath])
         }
         //save the changes
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Save error: \(error),description: \(error.userInfo)")
-        }
+        CoreDataStack.saveContext(managedContext)
         //update the array with indices
         selectedCells = [IndexPath]()
     }

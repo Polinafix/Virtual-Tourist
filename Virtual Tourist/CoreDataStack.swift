@@ -34,9 +34,18 @@ struct CoreDataStack {
         return self.storeContainer.viewContext
     }()
     
+    static func saveContext(_ managedContext: NSManagedObjectContext){
+        
+        guard managedContext.hasChanges else { return }
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Unresolved error \(error), \(error.userInfo)")
+        }
+        
+    }
     
-    
-    mutating func saveContext () {
+    mutating func saveContext (managedContext: NSManagedObjectContext) {
         guard managedContext.hasChanges else { return }
         do {
             try managedContext.save()

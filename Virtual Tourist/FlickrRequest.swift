@@ -104,9 +104,7 @@ class FlickrRequest: NSObject{
                             return
                         }
                             
-                            //if let url  = URL(string: urlString){
-                                //let data = NSData(contentsOf: url)
-                                //saving the new object to core data
+                        
                         let photo = Photo(photoUrl: urlString, location: selectedPin, insertInto: context)
                                 images.append(photo)
                                 do {
@@ -114,14 +112,10 @@ class FlickrRequest: NSObject{
                                 } catch let error as NSError {
                                     print("Save error: \(error),description: \(error.userInfo)")
                                 }
-                            //}
                     }
                 
                     completionHandler(images,nil)
-                
-                    
-                    
-                    
+            
                 }
             }
         
