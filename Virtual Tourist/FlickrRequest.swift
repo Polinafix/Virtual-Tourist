@@ -21,7 +21,7 @@ class FlickrRequest: NSObject{
         var randomPage:Int = 1
             
         if numberOfPages > 0{
-            let limit = min(numberOfPages,30)
+            let limit = min(numberOfPages,200)
             randomPage = Int(arc4random_uniform(UInt32(limit)))+1
         }
         

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E0727D1A1F522A1300E4775E /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0727D191F522A1300E4775E /* Pin+CoreDataProperties.swift */; };
+		E0727D1E1F53706000E4775E /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0727D1D1F53706000E4775E /* Pin+CoreDataProperties.swift */; };
 		E0ABB4981F433BB7008CF0E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0ABB4971F433BB7008CF0E1 /* AppDelegate.swift */; };
 		E0ABB49A1F433BB7008CF0E1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0ABB4991F433BB7008CF0E1 /* MapViewController.swift */; };
 		E0ABB49D1F433BB7008CF0E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0ABB49B1F433BB7008CF0E1 /* Main.storyboard */; };
@@ -26,7 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E0727D191F522A1300E4775E /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Pin+CoreDataProperties.swift"; path = "../Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E0727D1D1F53706000E4775E /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Pin+CoreDataProperties.swift"; path = "../Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		E0ABB4941F433BB7008CF0E1 /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0ABB4971F433BB7008CF0E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0ABB4991F433BB7008CF0E1 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -103,7 +103,7 @@
 				E0D767DA1F4F27D500B66C16 /* Photo+CoreDataProperties.swift */,
 				E0ABB4AE1F43CDFD008CF0E1 /* Photo+CoreDataClass.swift */,
 				E0ABB4B01F43CDFD008CF0E1 /* Pin+CoreDataClass.swift */,
-				E0727D191F522A1300E4775E /* Pin+CoreDataProperties.swift */,
+				E0727D1D1F53706000E4775E /* Pin+CoreDataProperties.swift */,
 				E0ABB4AB1F43BE17008CF0E1 /* Model.xcdatamodeld */,
 				E0ABB4A91F43BABB008CF0E1 /* CoreDataStack.swift */,
 			);
@@ -204,7 +204,7 @@
 				E0ABB49A1F433BB7008CF0E1 /* MapViewController.swift in Sources */,
 				E0ABB4981F433BB7008CF0E1 /* AppDelegate.swift in Sources */,
 				E0ABB4B71F450CB5008CF0E1 /* GCDBlackBox.swift in Sources */,
-				E0727D1A1F522A1300E4775E /* Pin+CoreDataProperties.swift in Sources */,
+				E0727D1E1F53706000E4775E /* Pin+CoreDataProperties.swift in Sources */,
 				E0ABB4AD1F43BE17008CF0E1 /* Model.xcdatamodeld in Sources */,
 				E0ABB4C01F462B7F008CF0E1 /* Constants.swift in Sources */,
 			);

@@ -13,6 +13,8 @@ import CoreData
 struct CoreDataStack {
     
     
+    
+    
     private let modelName: String
     
     init(modelName: String){
@@ -30,7 +32,7 @@ struct CoreDataStack {
         return container
     }()
     
-    lazy var managedContext: NSManagedObjectContext = {
+    lazy  var managedContext: NSManagedObjectContext = {
         return self.storeContainer.viewContext
     }()
     
@@ -53,4 +55,21 @@ struct CoreDataStack {
             print("Unresolved error \(error), \(error.userInfo)")
 }
 }
+    
+   
+    static func autoSave(_ delayInSeconds : Int,_ context: NSManagedObjectContext ) {
+        
+        if delayInSeconds > 0 {
+           saveContext(context)
+            
+            let delayInNanoSeconds = UInt64(delayInSeconds) * NSEC_PER_SEC
+            let time = DispatchTime.now() + Double(Int64(delayInNanoSeconds)) / Double(NSEC_PER_SEC)
+            
+            DispatchQueue.main.asyncAfter(deadline: time) {
+                self.autoSave(delayInSeconds, context)
+            }
+        }
+    }
 }
+
+

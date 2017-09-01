@@ -157,10 +157,10 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
         
         if photo.photoData != nil{
             performUIUpdatesOnMain {
-                cell?.imageView.image = UIImage(data:photo.photoData as! Data)
                 cell?.activityIndicator.stopAnimating()
                 cell?.activityIndicator.hidesWhenStopped = true
             }
+            cell?.imageView.image = UIImage(data:photo.photoData as! Data)
             
         }else{
             FlickrRequest.sharedInstance.fromDataToUrl(photo.photoUrl!, { (returnedData, error) in
@@ -175,6 +175,12 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
                     print("Data error: \(error)")
                 }
             })
+        }
+        
+        if selectedCells.index(of: indexPath) != nil {
+            cell?.imageView.alpha = 0.4
+        }else{
+            cell?.imageView.alpha = 1.0
         }
         
         return cell!
@@ -198,6 +204,7 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
         }else{
              selectedCells.append(indexPath)
              print("new:\(selectedCells.count)")
+             selectedCells.sort{$1.row < $0.row}
              cell.imageView.alpha = 0.4
         }
         

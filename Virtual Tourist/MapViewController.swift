@@ -29,7 +29,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         navigationItem.rightBarButtonItem = editBtn
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
-        longPressGesture.minimumPressDuration = 1.0
+        longPressGesture.minimumPressDuration = 0.5
         self.mapView.addGestureRecognizer(longPressGesture)
         
         fetchPins()
