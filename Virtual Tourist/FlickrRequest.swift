@@ -57,7 +57,7 @@ class FlickrRequest: NSObject{
             
             //was there an error?
             guard (error == nil) else{
-                displayError("There was an error with your request: \(error)")
+                displayError("There was an error with your request: \(String(describing: error))")
                 return
             }
             //Did we get a successful 2xx response?

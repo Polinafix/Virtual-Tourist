@@ -35,7 +35,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         fetchPins()
     }
     
-    func editPins(){
+    @objc func editPins(){
         if isEditingMode{
             editBtn.title = "Done"
             editLabel.isHidden = false
@@ -50,7 +50,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     
-    func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
+    @objc func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
         
         if gesture.state == UIGestureRecognizerState.began{
             let point = gesture.location(in: self.mapView)

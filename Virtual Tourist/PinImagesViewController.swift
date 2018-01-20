@@ -160,19 +160,19 @@ class PinImagesViewController: UIViewController, UICollectionViewDelegate, UICol
                 cell?.activityIndicator.stopAnimating()
                 cell?.activityIndicator.hidesWhenStopped = true
             }
-            cell?.imageView.image = UIImage(data:photo.photoData as! Data)
+            cell?.imageView.image = UIImage(data:photo.photoData! as Data)
             
         }else{
             FlickrRequest.sharedInstance.fromDataToUrl(photo.photoUrl!, { (returnedData, error) in
                 if let photoData = returnedData{
                     performUIUpdatesOnMain {
                         photo.photoData = photoData as NSData?
-                        cell?.imageView.image = UIImage(data: photo.photoData as! Data)
+                        cell?.imageView.image = UIImage(data: photo.photoData! as Data)
                         cell?.activityIndicator.stopAnimating()
                         cell?.activityIndicator.hidesWhenStopped = true
                     }
                 }else{
-                    print("Data error: \(error)")
+                    print("Data error: \(String(describing: error))")
                 }
             })
         }
