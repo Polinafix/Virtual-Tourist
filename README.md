@@ -31,7 +31,7 @@ If no images are found a “No Images” label will be displayed.
 
 Tapping the New Collection button at the bottom of the page empties the photo album and fetches a new set of images.
 
-Users should be able to remove photos from an album by tapping them.All changes to the photo album are made persistent.
+Users can remove photos from an album by tapping them. All changes to the photo album are made persistent.
 
 &nbsp;![Imgur](https://i.imgur.com/LIJUJKY.png)
 
