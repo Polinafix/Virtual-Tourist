@@ -11,13 +11,10 @@ import CoreData
 // MARK: - CoreDataStack
 
 struct CoreDataStack {
-    
-    
-    
-    
+
     private let modelName: String
     
-    init(modelName: String){
+    init(modelName: String) {
         self.modelName = modelName
     }
     
@@ -36,15 +33,13 @@ struct CoreDataStack {
         return self.storeContainer.viewContext
     }()
     
-    static func saveContext(_ managedContext: NSManagedObjectContext){
-        
+    static func saveContext(_ managedContext: NSManagedObjectContext) {
         guard managedContext.hasChanges else { return }
         do {
             try managedContext.save()
         } catch let error as NSError {
             print("Unresolved error \(error), \(error.userInfo)")
         }
-        
     }
     
     mutating func saveContext (managedContext: NSManagedObjectContext) {
@@ -53,18 +48,14 @@ struct CoreDataStack {
             try managedContext.save()
         } catch let error as NSError {
             print("Unresolved error \(error), \(error.userInfo)")
-}
-}
-    
-   
+        }
+    }
+
     static func autoSave(_ delayInSeconds : Int,_ context: NSManagedObjectContext ) {
-        
         if delayInSeconds > 0 {
            saveContext(context)
-            
             let delayInNanoSeconds = UInt64(delayInSeconds) * NSEC_PER_SEC
-            let time = DispatchTime.now() + Double(Int64(delayInNanoSeconds)) / Double(NSEC_PER_SEC)
-            
+            let time = DispatchTime.now() + Double(Int64(delayInNanoSeconds)) / Double(NSEC_PER_SEC)            
             DispatchQueue.main.asyncAfter(deadline: time) {
                 self.autoSave(delayInSeconds, context)
             }

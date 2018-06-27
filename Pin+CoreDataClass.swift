@@ -17,23 +17,17 @@ public class Pin: NSManagedObject {
         let pin = MKPointAnnotation()
         pin.coordinate.latitude = latitude
         pin.coordinate.longitude = longitude
-        
         return pin
     }
     
-    convenience init(_ latitude: Double,_ longitude: Double, context: NSManagedObjectContext?){
-        
-        if let pin = NSEntityDescription.entity(forEntityName: "Pin", in: context!){
-        self.init(entity:pin, insertInto: context)
-        self.latitude = latitude
-        self.longitude = longitude
-        self.pageNum = 0
-    }else{
-        fatalError("Unable to find entity name!")
+    convenience init(_ latitude: Double,_ longitude: Double, context: NSManagedObjectContext?) {
+        if let pin = NSEntityDescription.entity(forEntityName: "Pin", in: context!) {
+            self.init(entity:pin, insertInto: context)
+            self.latitude = latitude
+            self.longitude = longitude
+            self.pageNum = 0
+        } else {
+            fatalError("Unable to find entity name!")
+        }
     }
-    }
-    
-   
-    
-
 }

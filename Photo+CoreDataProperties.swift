@@ -15,9 +15,7 @@ extension Photo {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Photo> {
         return NSFetchRequest<Photo>(entityName: "Photo");
     }
-
     @NSManaged public var photoData: NSData?
     @NSManaged public var photoUrl: String?
     @NSManaged public var location: Pin?
-
 }

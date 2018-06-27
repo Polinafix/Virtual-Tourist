@@ -14,11 +14,9 @@ struct Constants {
     struct Flickr {
         static let ApiScheme = "https"
         static let ApiHost = "api.flickr.com"
-        static let ApiPath = "/services/rest"
- 
+        static let ApiPath = "/services/rest" 
     }
-    
-    
+
     // MARK: Flickr Parameter Keys
     struct FlickrParameterKeys {
         static let Method = "method"

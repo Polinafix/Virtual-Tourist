@@ -18,20 +18,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var managedContext: NSManagedObjectContext!
     var isEditingMode = true
     var pins = [Pin]()
-   
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         editLabel.isHidden = true
         mapView.delegate = self
-        
         editBtn = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(self.editPins))
         navigationItem.rightBarButtonItem = editBtn
-        
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
         longPressGesture.minimumPressDuration = 0.5
         self.mapView.addGestureRecognizer(longPressGesture)
-        
         fetchPins()
     }
     
@@ -40,22 +36,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             editBtn.title = "Done"
             editLabel.isHidden = false
             isEditingMode = false
-            
-        }else{
+        } else {
             editBtn.title = "Edit"
             editLabel.isHidden = true
             isEditingMode = true
-            
         }
     }
-
     
     @objc func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
-        
         if gesture.state == UIGestureRecognizerState.began{
             let point = gesture.location(in: self.mapView)
             let coordinate = self.mapView.convert(point, toCoordinateFrom: self.mapView)
-            
             let pin = Pin(coordinate.latitude, coordinate.longitude, context: managedContext)
             pins.append(pin)
             mapView.addAnnotation(pin.annotation)
@@ -64,66 +55,50 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     //fetch pins from Core Data
-    func fetchPins(){
+    func fetchPins() {
         let pinFetch:NSFetchRequest<Pin> = Pin.fetchRequest()
-        
-        do{
+        do {
             let results = try managedContext.fetch(pinFetch)
-            
-            if results.count > 0{
-            for result in results{
-                pins.append(result)
-                mapView.addAnnotation(result.annotation)
-                
-            }
-            }else{
+            if results.count > 0 {
+                for result in results {
+                    pins.append(result)
+                    mapView.addAnnotation(result.annotation)
+                }
+            } else {
                 print("no pins located yet")
             }
-            
-        }catch let error as NSError {
+        } catch let error as NSError {
             print("Fetch error: \(error) description: \(error.userInfo)")
         }
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
         let reuseId = "pin"
-        
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         pinView?.animatesDrop = true
-        
         return pinView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-       
        mapView.deselectAnnotation(view.annotation, animated: true)
-        
        let lat = view.annotation?.coordinate.latitude
        let lon = view.annotation?.coordinate.longitude
        print("selected pin's lat:\(lat!), lon:\(lon!)")
         
         if !isEditingMode {
-            
             for pin in pins {
-                
                 if pin.latitude == lat && pin.longitude == lon {
-                    managedContext.delete(pin)
-                    CoreDataStack.saveContext(managedContext)
-                    
-                    let index = pins.index(of: pin)
-                    pins.remove(at: index!)
-                    
-                    
-                    mapView.removeAnnotation(view.annotation!)
-                    print("the pin was deleted")
-                    print(pins.count)
-                    
+                managedContext.delete(pin)
+                CoreDataStack.saveContext(managedContext)
+                let index = pins.index(of: pin)
+                pins.remove(at: index!)
+                mapView.removeAnnotation(view.annotation!)
+                print("the pin was deleted")
+                print(pins.count)
                 }
             }
-            
-        }else {
+        } else {
             for pin in pins {
                 if pin.latitude == lat && pin.longitude == lon {
                     performSegue(withIdentifier: "PhotoAlbumView", sender: pin)
@@ -131,8 +106,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-    
-    
+        
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "PhotoAlbumView" {
             let controller = segue.destination as! PinImagesViewController

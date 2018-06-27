@@ -13,17 +13,13 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    //the stack won’t be set up until the first time you access the property.
     lazy var stack = CoreDataStack(modelName: "Model")
     
     func getContext() -> NSManagedObjectContext {
         return stack.managedContext
     }
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
         guard let navController =
             window?.rootViewController as? UINavigationController,
             let viewController =
@@ -31,10 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return true
         }
         viewController.managedContext = stack.managedContext
-        
         CoreDataStack.autoSave(5, stack.managedContext)
-        
-        
         return true
     }
 
